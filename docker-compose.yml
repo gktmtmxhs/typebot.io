@@ -14,8 +14,8 @@ x-typebot-common: &typebot-common
     DATABASE_URL: "postgresql://postgres:mytypebot01015@typebot-db:5432/typebot" # <-- DB 사용자/비밀번호/DB명/호스트명 확인! testpassword123은 임시값.
     REDIS_URL: "redis://typebot-redis:6379" # <-- 이건 그대로 둡니다.
     NEXTAUTH_URL: "http://localhost:3000"
-    NEXTAUTH_SECRET: "EkBYYgQB7NpdxWunjIAAln5FWFP2xknA" # <-- 임시값 (a 64개), 실제로는 openssl rand 값 사용 권장
-    ENCRYPTION_SECRET: "EkxYYgQB7NpdxWunjIAAln5FWFP2xknL" # <-- 임시값 (b 64개), 실제로는 openssl rand 값 사용 권장
+    NEXTAUTH_SECRET: "EkBYYgQB7NpdxWunjIAAln5FWFP2xknAEkBYYgQB7NpdxWunjIAAln5FWFP2xBnA" # <-- 임시값 (a 64개), 실제로는 openssl rand 값 사용 권장
+    ENCRYPTION_SECRET: "EkBYYgQB7NpdxWunjIAAln5FWFP2xknAEkBYYgQB7NpdxWunjIAAln5FWFP2C3nA" # <-- 임시값 (b 64개), 실제로는 openssl rand 값 사용 권장
     NEXT_PUBLIC_VIEWER_URL: "https://typebot-sado.trycloudflare.com" # <-- 실제 터널 URL
 
 services:
