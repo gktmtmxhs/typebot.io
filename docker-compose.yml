@@ -1,3 +1,4 @@
+# 공통 설정 정의 (이 부분은 그대로 둡니다)
 x-typebot-common: &typebot-common
   restart: always
   depends_on:
@@ -7,9 +8,15 @@ x-typebot-common: &typebot-common
       condition: service_healthy
   networks:
     - typebot-network
-  env_file: .env
-  environment:
-    REDIS_URL: redis://typebot-redis:6379
+  # env_file: .env  # <-- ★★★ 이 줄을 삭제하거나 주석 처리 (#) ★★★
+  environment:     # <-- ★★★ environment 섹션을 여기에 직접 추가 ★★★
+    # --- 필수 환경 변수 ---
+    DATABASE_URL: "postgresql://postgres:mytypebot01015@typebot-db:5432/typebot" # <-- DB 사용자/비밀번호/DB명/호스트명 확인! testpassword123은 임시값.
+    REDIS_URL: "redis://typebot-redis:6379" # <-- 이건 그대로 둡니다.
+    NEXTAUTH_URL: "http://localhost:3000"
+    NEXTAUTH_SECRET: "EkBYYgQB7NpdxWunjIAAln5FWFP2xknA" # <-- 임시값 (a 64개), 실제로는 openssl rand 값 사용 권장
+    ENCRYPTION_SECRET: "EkxYYgQB7NpdxWunjIAAln5FWFP2xknL" # <-- 임시값 (b 64개), 실제로는 openssl rand 값 사용 권장
+    NEXT_PUBLIC_VIEWER_URL: "https://typebot-sado.trycloudflare.com" # <-- 실제 터널 URL
 
 services:
   typebot-db:
@@ -18,8 +25,10 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=typebot
-      - POSTGRES_PASSWORD=typebot
+      # ★★★ 여기서 DB 사용자, 비밀번호, DB 이름을 위의 DATABASE_URL과 일치시켜야 합니다! ★★★
+      POSTGRES_DB: typebot   # DATABASE_URL의 /typebot 과 일치
+      POSTGRES_PASSWORD: mytypebot01015 # DATABASE_URL의 :testpassword123 과 일치
+      # POSTGRES_USER: postgres # 기본값은 postgres, DATABASE_URL의 postgres: 부분과 일치
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -44,14 +53,14 @@ services:
       - typebot-network
 
   typebot-builder:
-    <<: *typebot-common
+    <<: *typebot-common  # 공통 설정을 가져옵니다 (이제 environment 포함됨)
     image: baptistearno/typebot-builder:latest
-
+    # ports: 섹션은 없어야 합니다!
 
   typebot-viewer:
-    <<: *typebot-common
+    <<: *typebot-common  # 공통 설정을 가져옵니다 (이제 environment 포함됨)
     image: baptistearno/typebot-viewer:latest
-
+    # ports: 섹션은 없어야 합니다!
 
 networks:
   typebot-network:
